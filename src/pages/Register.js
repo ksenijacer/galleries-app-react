@@ -5,11 +5,11 @@ import { register } from "../store/auth/slice";
 export default function Register() {
     const dispatch = useDispatch();
     const [userData, setUserData] = useState({
-        first_name: "",
-        last_name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
-        password_confirmation: "",
+        passwordConfirmation: "",
         terms: false
     });
 
@@ -27,7 +27,7 @@ export default function Register() {
 
     return (
         <div>
-          <h2>Register</h2>
+          <h2 style={{ color: "white", backgroundColor: "orange" }}>Register</h2>
           <form onSubmit={handleSubmit}>
             <div>
               <input
@@ -52,12 +52,13 @@ export default function Register() {
             </div>
             <div>
               <label>
-                Please read and accept Terms and Conditions before making profile.
-              </label>
-              <input required type="checkbox" name="terms" value={true}
+                <input required type="checkbox" name="terms" value={true}
                 onChange={({ target }) => setUserData({ ...userData, terms: target.checked })}/>
+                Please read and accept Terms and Conditions before making profile  
+              </label>
+              
             </div>
-            <button>Register</button>
+            <button style={{ color: "white", backgroundColor: "green" }}>Register</button>
           </form>
         </div>
     );
