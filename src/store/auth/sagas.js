@@ -1,15 +1,18 @@
 import { put, call, takeLatest } from "redux-saga/effects";
-import { login, logout, register, getActiveUser, setActiveUser, setToken } from "./slice";
+import { login, logout, register, getActiveUser, setActiveUser, setToken, } from "./slice";
 import AuthService from "../../services/AuthService";
 
-function* handleRegister(action){
-    try{
-        const {user, token} = yield call(AuthService.register, action.payload);
-        yield put(setToken(token));
-        yield put(setActiveUser(user));
-    } catch (error){
-        alert("Invalid input data");
-    }
+function* handleRegister(action) {
+    try {
+        const data = yield call(AuthService.register, action.payload.credentials)
+        yield put(setToken(data.token))
+            if (action.payload.meta.onSuccess) {
+                yield call(action.payload.meta.onSuccess)
+            }
+        
+        } catch (error) {
+            alert("Invalid input values");
+        }
 }
 
 function* handleLogin(action){

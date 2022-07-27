@@ -19,7 +19,7 @@ export default function Navbar(){
             <ul style={{listStyleType: "none", text_align: "center" }}>
             {isAuthenticated ? (
                 <h3>
-                    User: {activeUser && activeUser.first_name} {activeUser && activeUser.last_name}  
+                    User: {activeUser && activeUser.firstName} {activeUser && activeUser.lastName}  
                 </h3>
             ) : (
                 <h3 style={{color: "red"}}>

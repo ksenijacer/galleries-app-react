@@ -13,7 +13,7 @@ code {
 }
 
 li, a {
-  display: block;
+  display: inline;
   color: white;
   text-align: center;
   padding: 8px 10px;
@@ -28,9 +28,26 @@ ul {
   overflow: hidden;
   background-color: #EDD382;
   color: white;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 li a:hover {
   background-color: #F4442E;
+}
+
+input {
+  display: inline-block;
+  width: 10em;
+  position: relative;
+}
+
+label {
+  display: inline-block;
+  width: 10em;
+  margin-right: .5em;
+  padding-top: 1.5em;
+}
+
+.terms {
+  display: inline-flex;
 }

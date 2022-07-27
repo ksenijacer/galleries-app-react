@@ -27,37 +27,35 @@ export default function Register() {
 
     return (
         <div>
-          <h2 style={{ color: "white", backgroundColor: "orange" }}>Register</h2>
+          <h4 style={{ color: "white", backgroundColor: "orange" }}>Register</h4>
           <form onSubmit={handleSubmit}>
-            <div>
+            <div><label>First name:
               <input
                 required placeholder="First name" value={userData.firstName}
-                onChange={({ target }) => setUserData({ ...userData, firstName: target.value })}/>
+                onChange={({ target }) => setUserData({ ...userData, firstName: target.value })}/></label>
             </div>
-            <div>
+            <div><label>Last name:
               <input required placeholder="Last name" value={userData.lastName}
-                onChange={({ target }) => setUserData({ ...userData, lastName: target.value })}/>
+                onChange={({ target }) => setUserData({ ...userData, lastName: target.value })}/></label>
             </div>
-            <div>
+            <div><label>Email:
               <input required type="email" placeholder="Email" value={userData.email}
-                onChange={({ target }) => setUserData({ ...userData, email: target.value })}/>
+                onChange={({ target }) => setUserData({ ...userData, email: target.value })}/></label>
             </div>
-            <div>
+            <div><label>Password:
               <input required type="password" placeholder="Password" value={userData.password}
-                onChange={({ target }) => setUserData({ ...userData, password: target.value })}/>
+                onChange={({ target }) => setUserData({ ...userData, password: target.value })}/></label>
             </div>
-            <div>
+            <div><label>Password check:
               <input required type="password" placeholder="Confirm password" value={userData.passwordConfirmation}
-                onChange={({ target }) => setUserData({ ...userData, passwordConfirmation: target.value })}/>
+                onChange={({ target }) => setUserData({ ...userData, passwordConfirmation: target.value })}/></label>
             </div>
             <div>
-              <label>
                 <input required type="checkbox" name="terms" value={true}
                 onChange={({ target }) => setUserData({ ...userData, terms: target.checked })}/>
-                Please read and accept Terms and Conditions before making profile  
-              </label>
-              
+                I have read and accept Terms and Conditions  
             </div>
+            < br/>
             <button style={{ color: "white", backgroundColor: "green" }}>Register</button>
           </form>
         </div>
