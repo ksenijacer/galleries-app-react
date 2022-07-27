@@ -4,6 +4,9 @@ import AuthService from "../../services/AuthService";
 
 function* handleRegister(action) {
     try {
+        console.log({
+            action
+        })
         const data = yield call(AuthService.register, action.payload.credentials)
         yield put(setToken(data.token))
             if (action.payload.meta.onSuccess) {

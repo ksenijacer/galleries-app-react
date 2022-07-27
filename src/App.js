@@ -10,6 +10,9 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import PublicRoute from "./components/PublicRoute";
 import PrivateRoute from './components/PrivateRoute';
+// import CreateGallery from './pages/CreateGallery';
+import Galleries from './pages/Galleries';
+
 
 function App() {
   const dispatch = useDispatch();
@@ -34,6 +37,28 @@ function App() {
           <PublicRoute exact path="/login">
             <Login/>
           </PublicRoute>
+
+          <Route exact path="/"> 
+            <Redirect to="/galleries"/>
+          </Route>
+          <Route exact path="/galleries">
+            <Galleries/>
+          </Route>
+          <PrivateRoute exact path="/profile">
+            <Galleries selfId={isAuthenticated ? (activeUser?.id) : null}/>
+          </PrivateRoute>
+          {/* <PrivateRoute exact path="/create">
+            <CreateGallery/>
+          </PrivateRoute> */}
+          {/* <Route exact path="/galleries/:id">
+            <Gallery/>
+          </Route> */}
+          {/* <PrivateRoute exact path ="/edit/:id">
+            <CreateGallery/>
+          </PrivateRoute> */}
+          {/* <Route exact path="/authors/:id">
+            <Galleries/>
+          </Route> */}
         </Switch>
       </Router>
     </div>

@@ -37,7 +37,7 @@ export default function Navbar(){
                     <li>
                     <Link to="/profile">My Gallery</Link>
                     </li>
-                    <button onClick={handleLogout}>Logout</button>
+                    <button style={{ color: "white", backgroundColor: "green" }} onClick={handleLogout}>Logout</button>
                 </>
             ) : (
                 <>

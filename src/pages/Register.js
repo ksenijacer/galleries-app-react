@@ -9,7 +9,7 @@ export default function Register() {
         lastName: "",
         email: "",
         password: "",
-        passwordConfirmation: "",
+        password_confirmation: "",
         terms: false
     });
 
@@ -22,7 +22,9 @@ export default function Register() {
           return;
         }
 
-        dispatch(register(userData));
+        dispatch(register({
+          credentials:userData
+        }));
     }
 
     return (
@@ -47,8 +49,8 @@ export default function Register() {
                 onChange={({ target }) => setUserData({ ...userData, password: target.value })}/></label>
             </div>
             <div><label>Password check:
-              <input required type="password" placeholder="Confirm password" value={userData.passwordConfirmation}
-                onChange={({ target }) => setUserData({ ...userData, passwordConfirmation: target.value })}/></label>
+              <input required type="password" placeholder="Confirm password" value={userData.password_confirmation}
+                onChange={({ target }) => setUserData({ ...userData, password_confirmation: target.value })}/></label>
             </div>
             <div>
                 <input required type="checkbox" name="terms" value={true}

@@ -13,6 +13,8 @@ export const galleriesSlice = createSlice({
     name: "galleries",
     initialState: {
         gallery: null,
+        term:null,
+        userId:null,
         page: {
             data: [],
             current_page: 1,
