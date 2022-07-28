@@ -1,26 +1,43 @@
-// import React from "react";
-// import { useDispatch } from "react-redux";
-// import { useHistory } from "react-router-dom";
-// import { deleteCar } from "../store/cars";
+import React, { useEffect } from "react";
+import { Redirect, useParams } from "react-router-dom";
+import { get } from "../store/galleries/slice";
+import { selectGallery } from "../store/galleries/selectors";
 
-// function SingleGallery({
+
+export default function SingleGallery() {
+    const dispatch = useDispatch();
+    const history = useHistory();
   
-// }) {
-//   const dispatch = useDispatch();
-//   const history = useHistory();
+    const { id } = useParams();
+    const gallery = useSelector(selectGallery);
+  
+  
+    useEffect(() => {
+      if (id) {
+        dispatch(
+          get({
+            id,
+            meta: {
+              onError: () => history.push("/galleries"),
+            },
+          })
+        );
+      }
+    }, [id]);
+  
+    if (!gallery) {
+      return null;
+    }
 
-//   const handleEdit = () => {
-//     history.push(`edit/${id}`);
-//   };
+  return (
+    <div style={{ marginLeft: 5 }}>
+      <h2>{gallery.title}</h2>
+      <h4>{gallery.description}</h4>
+      <h6>{gallery.user_id}</h6>
 
-//   const handleDelete = async () => {
-//     const response = prompt(
-//       "Are you sure you want to delete this car ?\n Enter 'Yes' if you are"
-//     );
-
-//     if (response !== "Yes") {
-//       return;
-//     }
+    </div>
+  );
+}
 
 //     dispatch(delete(id));
 //   };

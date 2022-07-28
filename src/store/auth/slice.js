@@ -24,7 +24,8 @@ const authSlice = createSlice({
 
         setRegistrationErrors(state, action) {
             state.registrationErrors = action.payload;
-          },
+        },
+
 
         ...middlewareActions
     }
