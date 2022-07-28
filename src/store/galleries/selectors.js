@@ -3,5 +3,10 @@ export function selectGalleries(state){
 }
 
 export function selectGallery(state){
-    return !!state.galleries.gallery;
+    return state.galleries.gallery;
 }
+
+export function selectCreateErrors(state) {
+    return state.gallery.createErrors;
+}
+  

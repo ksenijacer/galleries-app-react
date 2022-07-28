@@ -1,256 +1,229 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
-import GalleryService from "../services/MovieService";
-import { add } from "../store/galleries/slice";
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  createGallery,
+  editGallery,
+  getGallery,
+  selectCreateErrors,
+  selectGallery,
+} from '../store/gallery/index';
+import { useNavigate, useParams } from 'react-router-dom';
+import { selectActiveUser } from '../store/auth';
 
-export default function CreateGallery() {
-  const { id } = useParams();
-  const history = useHistory();
+function CreateGallery() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const galleryForUpdate = useSelector(selectGallery);
+  const authUser = useSelector(selectActiveUser);
 
-  const retrievedGallery = useSelector(selectGallery);
-
-  const [newGallery, setNewGallery] = useState({
-      title: "",
-      description: "",
-      images: []
+  const [gallery, setGallery] = useState({
+    name: '',
+    description: '',
+    url: [''],
   });
+  const createErrors = useSelector(selectCreateErrors);
 
-  const [newImages, setNewImages] = useState([{
-      url: ""
-  }]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  // If id param exist -> get gallery
+  useEffect(() => {
     if (id) {
-      let data = await movieService.edit(id, movieData);
-      history.push("/movies");
+      dispatch(
+        getGallery({
+          id,
+          meta: { onNotFound: handleNotFoundAction },
+        })
+      );
+    } else {
+      handleResetForm();
+    }
+  }, [id]);
+
+  // If gallery belongs to the user -> fill the form
+  useEffect(() => {
+    if (
+      id &&
+      galleryForUpdate &&
+      authUser?.id &&
+      galleryForUpdate?.user_id === authUser?.id
+    ) {
+      const { name, description, images } = galleryForUpdate;
+      const url = images?.map(({ url }) => url);
+      setGallery({ name, description, url });
+    }
+  }, [galleryForUpdate, authUser?.id]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (id) {
+      dispatch(
+        editGallery({
+          id,
+          gallery,
+          meta: { onSuccess: handleActionSuccess },
+        })
+      );
     } else {
       dispatch(
-        add({
-          gallery: galleryData,
-          meta: {
-            onSuccess: (movie) => {
-              history.push(`movies/${movie.id}`);
-            },
-          },
+        createGallery({
+          gallery,
+          meta: { onSuccess: handleActionSuccess },
         })
       );
     }
   };
 
-  const handleReset = () => {
-    setMovieData({
-      title: "",
-      director: "",
-      image_url: "",
-      release_date: "",
-      genre: "",
+  function handleActionSuccess() {
+    navigate(id ? `/galleries/${id}` : '/my-galleries');
+  }
+
+  function handleNotFoundAction() {
+    navigate('/', { replace: true });
+  }
+
+  const handleResetForm = () => {
+    setGallery({
+      name: '',
+      description: '',
+      url: [''],
     });
   };
 
-  useEffect(() => {
-    const fetchMovie = async () => {
-      const { id: _, created_at, ...restData } = await movieService.get(id);
+  // show loading... while data is loading, if gallery does not exist -> redirect
+  if (id && (!galleryForUpdate || !authUser?.id)) {
+    return <div>Loading...</div>;
+  } else if (id && galleryForUpdate?.user_id !== authUser?.id) {
+    handleNotFoundAction();
+  }
 
-      setMovieData(restData);
-    };
+  //Image URL - handlers
+  const handleUpdateUrl = (target, index) => {
+    const newUrl = [...gallery.url];
+    newUrl[index] = target.value;
+    setGallery({ ...gallery, url: newUrl });
+  };
 
-    if (id) {
-      fetchMovie();
+  const handleAddUrl = () => {
+    setGallery({ ...gallery, url: [...gallery.url, ''] });
+  };
+
+  const handleRemoveUrl = (index) => {
+    if (gallery.url.length > 1) {
+      const newUrl = [
+        ...gallery.url.slice(0, index),
+        ...gallery.url.slice(index + 1),
+      ];
+      setGallery({ ...gallery, url: newUrl });
     }
-  }, [id]);
+  };
 
+  const handleChangeUrlPosition = (index, step) => {
+    const newUrl = gallery.url.filter((product, i) => i !== index);
+    newUrl.splice(Math.max(index + step, 0), 0, gallery.url[index]);
+    setGallery({ ...gallery, url: newUrl });
+  };
+  //Image URL - handlers - end
   return (
-    <div>
-      <h2>{id ? "Edit" : "Add new"} </h2>
-      <form
-        style={{ display: "flex", flexDirection: "column", width: 300 }}
-        onSubmit={handleSubmit}
-      >
+    <div className="container">
+      <h3>{id ? 'Edit gallery' : 'Create New Gallery'}</h3>
+      <form onSubmit={handleSubmit} className="mb-5">
         <input
-          required
-          minLength={2}
-          value={movieData.title}
-          placeholder="Title"
+          className="form-control mb-3"
+          placeholder="name"
+          name="name"
+          type="text"
           onChange={({ target }) =>
-            setMovieData({ ...movieData, title: target.value })
+            setGallery({ ...gallery, [target.name]: target.value })
           }
+          value={gallery.name}
         />
-        <input
-          required
-          minLength={2}
-          value={movieData.director}
-          placeholder="Director"
+        {createErrors && <p className="text-danger">{createErrors.name}</p>}
+
+        <textarea
+          className="form-control mb-3"
+          placeholder="description"
+          name="description"
+          rows="4"
           onChange={({ target }) =>
-            setMovieData({ ...movieData, director: target.value })
+            setGallery({ ...gallery, [target.name]: target.value })
           }
+          value={gallery.description}
         />
-        <input
-          required
-          minLength={2}
-          value={movieData.image_url}
-          placeholder="Image url"
-          onChange={({ target }) =>
-            setMovieData({ ...movieData, image_url: target.value })
-          }
-        />
-        <input
-          required
-          type="date"
-          value={movieData.release_date}
-          placeholder="Release date"
-          onChange={({ target }) =>
-            setMovieData({ ...movieData, release_date: target.value })
-          }
-        />
-        <input
-          required
-          minLength={2}
-          value={movieData.genre}
-          placeholder="Genre"
-          onChange={({ target }) =>
-            setMovieData({ ...movieData, genre: target.value })
-          }
-        />
-        <button>{id ? "Save" : "Add"}</button>
-        <button type="button" onClick={handleReset}>
-          Reset
+        {createErrors && (
+          <p className="text-danger">{createErrors.description}</p>
+        )}
+
+        {gallery?.url?.map((image, index) => (
+          <div key={index}>
+            <div className="d-flex">
+              <input
+                required
+                className="form-control mb-2"
+                placeholder="image"
+                name="url"
+                type="url"
+                onChange={({ target }) => handleUpdateUrl(target, index)}
+                value={gallery.url[index]}
+              />
+
+              <div className="btn-group btn-group-sm gap-1 col-3">
+                <button
+                  className="btn btn-primary mb-2"
+                  disabled={index === 0}
+                  type="button"
+                  onClick={() => handleChangeUrlPosition(index, -1)}
+                >
+                  Move Up
+                </button>
+                <button
+                  className="btn btn-primary mb-2"
+                  disabled={gallery.url.length - 1 === index}
+                  type="button"
+                  onClick={() => handleChangeUrlPosition(index, 1)}
+                >
+                  Move Down
+                </button>
+                <button
+                  className="btn btn-sm btn-danger mb-2 "
+                  disabled={gallery.url.length === 1}
+                  type="button"
+                  onClick={() => handleRemoveUrl(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+            {createErrors && (
+              <div className="text-danger">{createErrors[`url.${index}`]}</div>
+            )}
+          </div>
+        ))}
+        <button className="btn btn-sm btn-primary my-2 mx-3">
+          {id ? 'Edit gallery' : 'Add gallery'}
+        </button>
+        <button
+          className="btn btn-sm btn-warning my-2 mx-3"
+          type="button"
+          onClick={handleResetForm}
+        >
+          clear form
+        </button>
+        <button
+          className="btn btn-sm btn-warning my-2 mx-3"
+          type="button"
+          onClick={handleActionSuccess}
+        >
+          cancel
+        </button>
+        <button
+          className="btn btn-sm btn-info my-2 mx-3 "
+          type="button"
+          onClick={handleAddUrl}
+        >
+          Add another URL
         </button>
       </form>
     </div>
   );
 }
 
-//     const handleSubmit = (e) => {
-//         e.preventDefault();
-
-//         if (id) {
-//             if (!retrievedGallery) {
-//                 alert("You can edit only your own gallery");
-//                 history.push("/galleries");
-//                 return;
-//             }
-//             dispatch(editGallery({newGallery:{ galleryId: id, title: newGallery.title, description: newGallery.description, images: newGallery.images}}))
-//             setTimeout(() => {
-//                 history.push(`/galleries/${retrievedGallery.id}`);
-//             }, 1500);
-//         } else {
-//             dispatch(createGallery(newGallery))
-//             setTimeout(() => {
-//                 history.push("/galleries/me");
-//             }, 1500);
-//         }
-//     }
-
-//     const handleCancel = (e) =>{
-//         e.preventDefault();
-//         if (id) {
-//             history.push(`/galleries/${retrievedGallery.id}`);
-//         } else {
-//             history.push("/galleries/me");
-//         }
-//     }
-
-//     const handleInputChange = (e, index) => {
-//         const { name, value } = e.target;
-//         const list = [...newImages];
-//         list[index][name] = value;
-//         setNewImages(list);
-//     }
-
-//     const handleAddClick = () => {
-//         setNewImages([...newImages, { url: "" }]);
-//     }
-
-//     useEffect(() => {
-//         setNewGallery({
-//             ...newGallery,
-//             images: newImages
-//         })
-//     }, 
-//     [newImages])
-
-//     useEffect(() => {
-//         if(id){
-//             setNewGallery(retrievedGallery);
-//             setNewImages(retrievedGallery?.images);
-//             if (!retrievedGallery) {
-//                 alert("You can edit only your own gallery");
-//                 history.push("/galleries");
-//                 return;
-//             }
-//         }
-//     }, 
-//     [id])
-
-//     const handleRemoveClick = index => {
-//         const list = [...newImages];
-//         list.splice(index, 1);
-//         setNewImages(list);
-//     }
-
-//     const reorderArray = (event, originalArray) => {
-//         const movedItem = originalArray.find((i, index) => index === event.oldIndex);
-//         const remainingItems = originalArray.filter((i, index) => index !== event.oldIndex);
-
-//         const reorderedItems = [
-//             ...remainingItems.slice(0, event.newIndex),
-//             movedItem,
-//             ...remainingItems.slice(event.newIndex)
-//         ];
-
-//         return reorderedItems;
-//     }
-
-//     function changeOrder(index, direction) {
-//         var updatedImages = [...newImages];
-//         setNewImages(reorderArray({oldIndex: index, newIndex: index + (direction === "UP" ? (-1) : 1)}, updatedImages));
-//     }
-
-//     return (
-//         <div>
-//             <form onSubmit={handleSubmit}>
-//                 <h2 style={{ padding: "10px" }}>{id ? "Edit Gallery" : "Create Gallery"}</h2>
-//                 <div style={{ padding: "10px" }}>
-//                     <input required type="text" id="title" placeholder="Title" value={newGallery?.title} 
-//                     onChange={({ target }) =>
-//                     setNewGallery({ ...newGallery, title: target.value })}/>
-//                 </div>
-//                 <div style={{ padding: "10px" }}>
-//                     <textarea cols="50" rows="4" type="text" id="description" placeholder="Description" value={newGallery?.description} 
-//                     onChange={({ target }) =>
-//                     setNewGallery({ ...newGallery, description: target.value })}/>
-//                 </div>
-//                 {newImages && newImages.map((x, i) => {
-//                     return (
-//                         <div>
-//                             <input required key={i} name="url" value={x.url} placeholder="Image url" onChange={e => handleInputChange(e, i)} />
-//                             <span>
-//                                 {newImages?.length !== 1 && <button onClick={() => handleRemoveClick(i)}>Remove</button>}
-//                             </span>
-//                             <span>
-//                                 {newImages?.length !== 1 && <button type="button" onClick={() => changeOrder(i, "UP")}>Move Up</button>}
-//                             </span>
-//                             <span>
-//                                 {newImages?.length !== 1 && <button type="button" onClick={() => changeOrder(i, "DOWN")}>Move Down</button>}
-//                             </span>
-//                             <div>
-//                                 {newImages?.length - 1 === i  && <button onClick={handleAddClick}>Add picture</button>}
-//                             </div>
-//                         </div>
-//                     )
-//                 })}
-
-//                 <span>
-//                     <button type="submit">{id ? "Edit" : "Submit"}</button>
-
-//                     <button onClick={handleCancel}>Cancel</button>     
-//                 </span>
-//             </form>
-
-//         </div>
-//     );
-// }
+export default CreateGallery;

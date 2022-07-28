@@ -12,6 +12,7 @@ import PublicRoute from "./components/PublicRoute";
 import PrivateRoute from './components/PrivateRoute';
 // import CreateGallery from './pages/CreateGallery';
 import Galleries from './pages/Galleries';
+import Gallery from './pages/Gallery';
 
 
 function App() {
@@ -47,6 +48,10 @@ function App() {
           <PrivateRoute exact path="/profile">
             <Galleries selfId={isAuthenticated ? (activeUser?.id) : null}/>
           </PrivateRoute>
+          <Route path="/authors/:id" element={<Galleries />} />
+           <Route path="/galleries/:id" element={<Gallery />} />
+           <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}/>
+            <Route path="/my-galleries" element={<Galleries />} />
           {/* <PrivateRoute exact path="/create">
             <CreateGallery/>
           </PrivateRoute> */}

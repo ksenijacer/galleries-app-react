@@ -1,43 +1,47 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
-import { selectGalleries } from "../store/galleries/selectors";
-import { deleteGallery, getAll } from "../store/galleries/slice";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getGalleries, selectGalleries } from '../store/galleries';
+import { useLocation, useParams } from 'react-router-dom';
+import { selectActiveUser } from '../store/auth';
+import SingleGallery  from './../components/SingleGallery';
 
-export default function AppMovies() {
-  const dispatch = useDispatch();
-  const history = useHistory();
-
-  const galleries = useSelector(selectGalleries);
-
-  const handleDelete = (id) => {
-    dispatch(deleteGallery(id));
-  };
-
-  useEffect(() => {
-    dispatch(getAll());
-  }, []);
+function Galleries() {
+    const dispatch = useDispatch();
+    let { id } = useParams();
+    const authUser = useSelector(selectActiveUser);
+    const { pathname } = useLocation();
+    const galleries = useSelector(selectGalleries);
+    let title = 'Galleries';
+  
+    if (!id && pathname === '/my-galleries') {
+      title = 'My galleries';
+      id = authUser?.id;
+    }
+    useEffect(() => {
+      dispatch(getGalleries({ author: id }));
+    }, [id]);
+  
 
   return (
-    <div style={{ marginLeft: 5 }}>
-      <h2>Galleries</h2>
-      {galleries.data.map((gallery) => (
-        <div
-          key={gallery.id}
-          style={{
-            border: "3px solid orange",
-            width: 300,
-            marginTop: 15,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <p>
-            <strong>Title:</strong> {gallery.title}
-          </p>
-          <button onClick={() => handleDelete(gallery.id)}>Delete</button>
-        </div>
-      ))}
+    <div>
+      <div>
+        <h3 style={{ color: "white", backgroundColor: "orange" }}>{title}</h3>
+      </div>
+      {galleries ? (
+        galleries.data.length ? (
+          <div className="card-group mt-2">
+            {galleries.data.map((gallery) => (
+              <SingleGallery key={gallery.id} gallery={gallery} />
+            ))}
+          </div>
+        ) : (
+          'Nothing to show'
+        )
+      ) : (
+        'Loading...'
+      )}
     </div>
   );
 }
+
+export default Galleries;

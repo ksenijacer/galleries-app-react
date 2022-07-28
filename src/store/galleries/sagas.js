@@ -1,80 +1,138 @@
-import { put, call, takeLatest } from "redux-saga/effects";
-import { getAll, get, setGalleries, setGallery, add, edit, deleteGallery, deleteGallerySuccess } from "./slice";
-import GalleriesService from "../../services/GalleriesService";
-
-function* getGalleriesHandler() {
+import {
+    setCreateErrors,
+    setGalleries,
+    setGallery,
+    setAddCommentErrors,
+    setNewComment,
+    setDeletedComment,
+    createGallery,
+    getGalleries,
+    getGallery,
+    editGallery,
+    deleteGallery,
+    addComment,
+    deleteComment,
+    appendGalleries,
+  } from './index';
+  import { takeLatest, call, put, select } from 'redux-saga/effects';
+  import GalleriesService from './../../services/GalleriesService';
+//   import CommentService from '../../services/CommentService';
+  
+  function* getGalleriesHandler({ payload }) {
+    if (!(payload.page > 1)) {
+      yield put(setGalleries(null));
+    }
     try {
       const galleries = yield call(GalleriesService.getAll, payload);
-      yield put(
-        setGalleries({
-          galleries
-        })
-      );
-    } catch (e) {
-      console.error(e);
+      if (galleries.current_page > 1) {
+        yield put(appendGalleries(galleries));
+      } else {
+        yield put(setGalleries(galleries));
+      }
+    } catch (error) {
+      console.log('get all galleries', error);
     }
   }
   
-  function* getGalleryHandler({ payload: galleryId }) {
+  function* addGalleryHandler({ payload }) {
+    yield put(setCreateErrors(null));
     try {
-      const gallery = yield call(GalleriesService.get, galleryId);
-      yield put(setGallery(gallery));
-      if (payload.meta.onSuccess) {
+      yield call(GalleriesService.create, payload.gallery);
+      if (typeof payload.meta?.onSuccess === 'function') {
         yield call(payload.meta.onSuccess);
       }
-    } catch (e) {
-      console.error(e);
-      if (payload.meta.onError) {
-        yield call(payload.meta.onError);
+    } catch (error) {
+      console.log('addGalleryHandler', error);
+      if (error.response.status === 422) {
+        yield put(setCreateErrors(error.response.data.errors));
       }
     }
-
-    function* deleteGalleryHandler({ payload: galleryId }) {
-        try {
-          yield call(GalleriesService.delete, galleryId);
-          yield put(deleteGallerySuccess(galleryId));
-        } catch (e) {
-          console.log(e);
-        }
-      }
-      
-      function* createGalleryHandler({ payload }) {
-        try {
-          yield call(GalleriesService.add, payload.gallery);
-          if (typeof payload.meta?.onSuccess === "function") {
-            yield call(payload.meta.onSuccess);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      
-      function* editGalleryHandler({ payload }) {
-        try {
-          yield call(GalleriesService.edit, payload.id, payload.gallery);
-          if (typeof payload.meta?.onSuccess === "function") {
-            yield call(payload.meta.onSuccess);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      }
   }
-
-
+  
+  function* getGalleryHandler({ payload }) {
+    yield put(setGallery(null));
+    try {
+      const gallery = yield call(GalleriesService.getById, payload.id);
+      yield put(setGallery(gallery));
+    } catch (error) {
+      console.log('get all gallery', error);
+      if (error.response.status === 404) {
+        if (typeof payload.meta?.onNotFound === 'function') {
+          yield call(payload.meta.onNotFound);
+        }
+      }
+    }
+  }
+  
+  function* editGalleryHandler({ payload }) {
+    yield put(setCreateErrors(null));
+    try {
+      yield call(GalleriesService.edit, payload.id, payload.gallery);
+      if (typeof payload.meta?.onSuccess === 'function') {
+        yield call(payload.meta.onSuccess);
+      }
+    } catch (error) {
+      console.log('addGalleryHandler', error);
+      if (error.response.status === 422) {
+        yield put(setCreateErrors(error.response.data.errors));
+      }
+    }
+  }
+  
+  function* deleteGalleryHandler({ payload }) {
+    try {
+      yield call(GalleriesService.delete, payload.id);
+      if (typeof payload.meta?.onDelete === 'function') {
+        yield call(payload.meta.onDelete);
+      }
+    } catch (error) {
+      console.log('deleteGalleryHandler', error);
+    }
+  }
+  
+//   function* addCommentHandler({ payload }) {
+//     yield put(setAddCommentErrors(null));
+//     try {
+//       const comment = yield call(CommentService.add, payload.id, payload.content);
+//       yield put(setNewComment(comment));
+//       if (typeof payload.meta?.onSuccess === 'function') {
+//         yield call(payload.meta.onSuccess);
+//       }
+//     } catch (error) {
+//       console.log('addCommentHandler', error);
+//       if (error.response.status === 422) {
+//         yield put(setAddCommentErrors(error.response.data.errors));
+//       }
+//     }
+//   }
+  
+//   function* deleteCommentHandler({ payload }) {
+//     try {
+//       yield call(CommentService.delete, payload);
+//       yield put(setDeletedComment(payload));
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }
+  
+  export function* watchAddGallery() {
+    yield takeLatest(createGallery.type, addGalleryHandler);
+  }
   export function* watchGetGalleries() {
-    yield takeLatest(getAll.type, getGalleriesHandler);
+    yield takeLatest(getGalleries.type, getGalleriesHandler);
   }
-  export function* watchGetMovie() {
-    yield takeLatest(get.type, getGalleryHandler);
+  export function* watchGetGallery() {
+    yield takeLatest(getGallery.type, getGalleryHandler);
   }
-
+  export function* watchEditGallery() {
+    yield takeLatest(editGallery.type, editGalleryHandler);
+  }
   export function* watchDeleteGallery() {
     yield takeLatest(deleteGallery.type, deleteGalleryHandler);
   }
-  export function* watchCreateGallery() {
-    yield takeLatest(add.type, createGalleryHandler);
-  }
-  export function* watchEditGallery() {
-    yield takeLatest(edit.type, editGalleryHandler);
-  }
+//   export function* watchAddComment() {
+//     yield takeLatest(addComment.type, addCommentHandler);
+//   }
+//   export function* watchDeleteComment() {
+//     yield takeLatest(deleteComment.type, deleteCommentHandler);
+//   }
