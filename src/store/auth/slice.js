@@ -1,35 +1,46 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const middlewareActions = {
-    login() {},
-    logout() {},
-    register() {},   
-    getActiveUser() {},
-
+  login() {},
+  register() {},
+  logout() {},
+  getActiveUser() {},
 };
 
 const authSlice = createSlice({
-    name: "auth",
-    initialState: {
-        token: localStorage.getItem("token"),
-        activeUser: null,
+  name: "auth",
+  initialState: {
+    token: localStorage.getItem("token"),
+    activeUser: null,
+    registrationErrors: null,
+    loginError: false,
+  },
+  reducers: {
+    setToken(state, action) {
+      state.token = action.payload;
     },
-    reducers: {
-        setActiveUser(state, action) {
-            state.activeUser = action.payload;
-        },
-        setToken(state, action) {
-            state.token = action.payload;
-        },
-
-        setRegistrationErrors(state, action) {
-            state.registrationErrors = action.payload;
-        },
-
-
-        ...middlewareActions
-    }
+    setActiveUser(state, action) {
+      state.activeUser = action.payload;
+    },
+    setRegistrationErrors(state, action) {
+      state.registrationErrors = action.payload;
+    },
+    setLoginError(state, action) {
+      state.loginError = action.payload;
+    },
+    ...middlewareActions,
+  },
 });
 
-export const { login, logout, register, getActiveUser, setActiveUser, setToken} = authSlice.actions;
+export const {
+  setToken,
+  setActiveUser,
+  logout,
+  login,
+  register,
+  getActiveUser,
+  setRegistrationErrors,
+  setLoginError,
+} = authSlice.actions;
+
 export default authSlice.reducer;

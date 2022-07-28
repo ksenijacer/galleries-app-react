@@ -1,36 +1,49 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../store/auth/slice";
-import { useHistory } from "react-router-dom";
-export default function Login(){
-    const dispatch = useDispatch();
-    const history = useHistory()
-    const [credentials, setCredentials] = useState({
-        email: "",
-        password: "",
-    });
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        dispatch(login(credentials));
-    }
+import authService from "../services/AuthService";
+import { setActiveUser, setToken } from "../store/auth/slice";
 
-    return (
-        <div>
-          <h4 style={{ color: "white", backgroundColor: "orange" }}>Login</h4>
-          <form onSubmit={handleSubmit}>
-            <div>
-            <label>Email <input required type="email" placeholder="Email" value={credentials.email}
-                onChange={({ target }) => setCredentials({ ...credentials, email: target.value })}/></label>
-            </div>
-            <br/>
-            <div><label>Password:
-              <input required type="password" placeholder="Password" value={credentials.password}
-                onChange={({ target }) => setCredentials({ ...credentials, password: target.value })}/></label>
-            </div>
-            <br/>
-            <button style={{ color: "white", backgroundColor: "green" }}>Login</button>
-          </form>
-        </div>
-      );
+export default function Login() {
+  const dispatch = useDispatch();
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const data = await authService.login(credentials);
+    dispatch(setToken(data.token));
+    dispatch(setActiveUser(data.user));
+  }
+
+  return (
+    <div>
+      <h4 style={{ color: "white", backgroundColor: "orange" }}>Login</h4>
+      <form
+        style={{ display: "flex", flexDirection: "column", width: 300 }}
+        onSubmit={handleSubmit}
+      >
+        <input
+          required
+          value={credentials.email}
+          placeholder="Email"
+          onChange={({ target }) =>
+            setCredentials({ ...credentials, email: target.value })
+          }
+        />
+        <input
+          required
+          value={credentials.password}
+          placeholder="Password"
+          type="password"
+          onChange={({ target }) =>
+            setCredentials({ ...credentials, password: target.value })
+          }
+        />
+        <button style={{ color: "white", backgroundColor: "green"}}>Login</button>
+      </form>
+    </div>
+  );
 }

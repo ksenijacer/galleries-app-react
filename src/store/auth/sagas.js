@@ -1,70 +1,82 @@
-import { put, call, takeLatest } from "redux-saga/effects";
-import { login, logout, register, getActiveUser, setActiveUser, setToken, } from "./slice";
-import AuthService from "../../services/AuthService";
+import { call, put, takeLatest } from "redux-saga/effects";
 
-function* handleRegister(action) {
-    try {
-        console.log({
-            action
-        })
-        const data = yield call(AuthService.register, action.payload.credentials)
-        yield put(setToken(data.token))
-            if (action.payload.meta.onSuccess) {
-                yield call(action.payload.meta.onSuccess)
-            }
-        
-        } catch (error) {
-            alert("Invalid input values");
-        }
-}
+import authService from "../../services/AuthService";
+import {
+  login,
+  logout,
+  setToken,
+  setActiveUser,
+  register,
+  getActiveUser,
+  setRegistrationErrors,
+  setLoginError,
+} from "./slice";
 
-function* handleLogin(action){
-    try {
-        const {user, token} = yield call(AuthService.login, action.payload);
-        yield put(setToken(token));
-        yield put(setActiveUser(user));
-    } catch (error) {
-        alert("Password must contain at least one number and at least 8 characters");
+// workers - do not export
+function* loginHandler(action) {
+  yield put(setLoginError(false));
+  try {
+    const data = yield call(authService.login, action.payload);
+    localStorage.setItem("token", data.token);
+
+    yield put(setToken(data.token));
+    yield put(setActiveUser(data.user));
+  } catch (e) {
+    if (e.response.status == 401) {
+      yield put(setLoginError(true));
     }
+  }
 }
 
-function* handleLogout(){
-    try {
-        yield call(AuthService.logout);
-        yield put(setToken(null));
-        yield put(setActiveUser(null));
-    } catch (error) {
-        yield put(setToken(null));
-        yield put(setActiveUser(null));
-        alert("Can`t logout as a guest");
+function* registerHandler(action) {
+  yield put(setRegistrationErrors(null));
+  try {
+    const data = yield call(authService.register, action.payload);
+    localStorage.setItem("token", data.token);
+
+    yield put(setToken(data.token));
+    yield put(setActiveUser(data.user));
+  } catch (e) {
+    if (e.response.status == 422) {
+      yield put(setRegistrationErrors(e.response.data.errors));
     }
+  }
 }
 
-function* handleGetActiveUser(){
-    try {
-        const activeUser = yield call(AuthService.getActiveUser);
-        yield put(setActiveUser(activeUser));
-    } catch (error) {
-        yield put(setToken(null));
-        yield put(setActiveUser(null));
-        console.log("Session expired");
-    }
+function* logoutHandler(action) {
+  try {
+    yield call(authService.logout, action.payload);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    localStorage.removeItem("token");
+    yield put(setToken(null));
+    yield put(setActiveUser(null));
+  }
 }
 
-
-
-export function* watchLogin(){
-    yield takeLatest(login.type, handleLogin);
+function* getActiveUserHandler() {
+  try {
+    const activeUser = yield call(authService.getActiveUser);
+    yield put(setActiveUser(activeUser));
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-export function* watchLogout(){
-    yield takeLatest(logout.type, handleLogout);
+// watchers - export
+export function* watchLogin() {
+  yield takeLatest(login.type, loginHandler);
 }
 
-export function* watchRegister(){
-    yield takeLatest(register.type, handleRegister);
+export function* watchRegister() {
+  yield takeLatest(register.type, registerHandler);
 }
 
-export function* watchGetActiveUser(){
-    yield takeLatest(getActiveUser.type, handleGetActiveUser);
+export function* watchLogout() {
+  yield takeLatest(logout.type, logoutHandler);
+}
+
+export function* watchGetActiveUser() {
+  yield takeLatest(getActiveUser.type, getActiveUserHandler);
 }

@@ -35,10 +35,6 @@ export default function AppMovies() {
           <p>
             <strong>Title:</strong> {gallery.title}
           </p>
-          {/* <Link to={`/galleries/${gallery.id}`}>View gallery</Link>
-          <button onClick={() => history.push(`/edit/${gallery.id}`)}>
-            Edit
-          </button> */}
           <button onClick={() => handleDelete(gallery.id)}>Delete</button>
         </div>
       ))}
