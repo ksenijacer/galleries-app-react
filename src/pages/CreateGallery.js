@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  createGallery,
-  editGallery,
-  getGallery,
-  selectCreateErrors,
-  selectGallery,
-} from '../store/gallery/index';
-import { useNavigate, useParams } from 'react-router-dom';
+import { createGallery, editGallery, getGallery, selectCreateErrors,
+         selectGallery, setCreateErrors } from '../store/galleries/index';
+import { useHistory, useParams } from 'react-router-dom';
 import { selectActiveUser } from '../store/auth';
 
 function CreateGallery() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const history = useHistory();
   const { id } = useParams();
   const galleryForUpdate = useSelector(selectGallery);
   const authUser = useSelector(selectActiveUser);
@@ -23,8 +18,9 @@ function CreateGallery() {
     url: [''],
   });
   const createErrors = useSelector(selectCreateErrors);
+  console.log(createErrors);
 
-  // If id param exist -> get gallery
+  // If id param exist -> get gallery, if gallery doesn't exit -> redirect
   useEffect(() => {
     if (id) {
       dispatch(
@@ -34,18 +30,15 @@ function CreateGallery() {
         })
       );
     } else {
-      handleResetForm();
+      handleResetForm(); // Clear form when click on crete new gallery
     }
+    dispatch(setCreateErrors(''));
   }, [id]);
 
-  // If gallery belongs to the user -> fill the form
+  console.log(useEffect)
+  // when gallery and auth user loading are finished -> fill the form
   useEffect(() => {
-    if (
-      id &&
-      galleryForUpdate &&
-      authUser?.id &&
-      galleryForUpdate?.user_id === authUser?.id
-    ) {
+    if (id && galleryForUpdate && authUser?.id) {
       const { name, description, images } = galleryForUpdate;
       const url = images?.map(({ url }) => url);
       setGallery({ name, description, url });
@@ -73,11 +66,11 @@ function CreateGallery() {
   };
 
   function handleActionSuccess() {
-    navigate(id ? `/galleries/${id}` : '/my-galleries');
+    history.push(id ? `/galleries/${id}` : '/my-galleries');
   }
 
   function handleNotFoundAction() {
-    navigate('/', { replace: true });
+    history.push('/', { replace: true });
   }
 
   const handleResetForm = () => {
@@ -88,7 +81,7 @@ function CreateGallery() {
     });
   };
 
-  // show loading... while data is loading, if gallery does not exist -> redirect
+  // while gallery and auth user are loading -> show loading..., when finished if gallery isn't mine -> redirect
   if (id && (!galleryForUpdate || !authUser?.id)) {
     return <div>Loading...</div>;
   } else if (id && galleryForUpdate?.user_id !== authUser?.id) {
@@ -125,9 +118,8 @@ function CreateGallery() {
   return (
     <div className="container">
       <h3>{id ? 'Edit gallery' : 'Create New Gallery'}</h3>
-      <form onSubmit={handleSubmit} className="mb-5">
+      <form onSubmit={handleSubmit}>
         <input
-          className="form-control mb-3"
           placeholder="name"
           name="name"
           type="text"
@@ -139,7 +131,6 @@ function CreateGallery() {
         {createErrors && <p className="text-danger">{createErrors.name}</p>}
 
         <textarea
-          className="form-control mb-3"
           placeholder="description"
           name="description"
           rows="4"
@@ -157,7 +148,6 @@ function CreateGallery() {
             <div className="d-flex">
               <input
                 required
-                className="form-control mb-2"
                 placeholder="image"
                 name="url"
                 type="url"
@@ -198,21 +188,14 @@ function CreateGallery() {
           </div>
         ))}
         <button className="btn btn-sm btn-primary my-2 mx-3">
-          {id ? 'Edit gallery' : 'Add gallery'}
-        </button>
-        <button
-          className="btn btn-sm btn-warning my-2 mx-3"
-          type="button"
-          onClick={handleResetForm}
-        >
-          clear form
+          Submit
         </button>
         <button
           className="btn btn-sm btn-warning my-2 mx-3"
           type="button"
           onClick={handleActionSuccess}
         >
-          cancel
+          Cancel
         </button>
         <button
           className="btn btn-sm btn-info my-2 mx-3 "

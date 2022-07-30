@@ -7,8 +7,8 @@ import { selectRegistrationErrors } from "../store/auth/selectors";
 export default function Register() {
   const dispatch = useDispatch();
   const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
     password_confirmation: "",
@@ -26,36 +26,36 @@ export default function Register() {
     <div>
       <h4 style={{ color: "white", backgroundColor: "orange" }}>Register</h4>
       <form
-        style={{ display: "flex", flexDirection: "column", width: 300 }}
+        style={{ display: "flex", flexDirection: "column", width: 300, padding: 5 }}
         onSubmit={handleSubmit}
       > <label>
-        <input
+        <input style= {{ display: "flex", flexDirection: "column", width: 250 }}
           required
-          value={userData.firstName}
+          value={userData.first_name}
           placeholder="First name"
           onChange={({ target }) =>
-            setUserData({ ...userData, firstName: target.value })
+            setUserData({ ...userData, first_name: target.value })
           }
         />
-        {errors?.firstName?.length && (
-          <span style={{ color: "red" }}>{errors.firstName[0]}</span>
+        {errors?.first_name?.length && (
+          <span style={{ color: "red" }}>{errors.first_name[0]}</span>
         )}</label>
 
         <label>
-        <input
+        <input style= {{ display: "flex", flexDirection: "column", width: 250 }}
           required
-          value={userData.lastName}
+          value={userData.last_name}
           placeholder="Last name"
           onChange={({ target }) =>
-            setUserData({ ...userData, lastName: target.value })
+            setUserData({ ...userData, last_name: target.value })
           }
         />
-        {errors?.lastName?.length && (
-          <span style={{ color: "red" }}>{errors.lastName[0]}</span>
+        {errors?.last_name?.length && (
+          <span style={{ color: "red" }}>{errors.last_name[0]}</span>
         )}</label>
 
         <label>
-        <input
+        <input style= {{ display: "flex", flexDirection: "column", width: 250 }}
           required
           value={userData.email}
           type="email"
@@ -69,7 +69,7 @@ export default function Register() {
         )}</label>
 
         <label>
-        <input
+        <input style= {{ display: "flex", flexDirection: "column", width: 250 }}
           required
           value={userData.password}
           placeholder="Password"
@@ -83,7 +83,7 @@ export default function Register() {
         )}</label>
 
         <label>
-        <input
+        <input style= {{ display: "flex", flexDirection: "column", width: 250 }}
           required
           value={userData.password_confirmation}
           placeholder="Password confirmation"
@@ -95,7 +95,6 @@ export default function Register() {
         {errors?.password_confirmation?.length && (
           <span style={{ color: "red" }}>{errors.password_confirmation[0]}</span>
         )}</label>
-
 
         <div>
         <label>

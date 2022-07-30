@@ -1,27 +1,39 @@
-import { useEffect, useState } from "react";
- import { useDispatch, useSelector } from "react-redux";
- import { getGalleries, setSearchTerm } from "../store/galleries/slice";
- import { selectSearchTerm, selectSearchUserId, } from "../store/galleries/selectors";
+// import React, { useState } from 'react';
+// import { useNavigate, useLocation } from 'react-router-dom';
 
- export default function Search() {
-     const dispatch = useDispatch();
+// function Search() {
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const [search, setSearch] = useState('');
 
-     const term = useSelector(selectSearchTerm);
+//   function handleFilter(e) {
+//     e.preventDefault();
+//     setSearch('');
+//     navigate({
+//       pathname: location.pathname,
+//       search: search && `filter=${search}`,
+//     });
+//   }
 
-     const userId = useSelector(selectSearchUserId);
+//   return (
+//     <form onSubmit={handleFilter}>
+//       <div className="input-group">
+//         <div className="form-outline">
+//           <input
+//             type="search"
+//             id="form1"
+//             className="form-control"
+//             value={search}
+//             onChange={({ target }) => setSearch(target.value)}
+//             placeholder="Search"
+//           />
+//         </div>
+//         <button className="btn btn-primary" onClick={handleFilter}>
+//           <i className="fas fa-search">Filter</i>
+//         </button>
+//       </div>
+//     </form>
+//   );
+// }
 
-     function handleChangeSearchTerm(event) {
-         dispatch(setSearchTerm(event.target.value));
-     }
-
-     function handleSearch() {
-         dispatch(getGalleries({page: 1, term: term, userId: userId}));
-     }
-
-     return (
-         <div style={{ padding: "12px" }}>
-             <input type="text" onChange={handleChangeSearchTerm} placeholder="Search..." />
-             <button onClick={handleSearch}>Search</button>
-         </div>
-     );
-}
+// export default Search;

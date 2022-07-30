@@ -10,7 +10,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import PublicRoute from "./components/PublicRoute";
 import PrivateRoute from './components/PrivateRoute';
-// import CreateGallery from './pages/CreateGallery';
+import CreateGallery from './pages/CreateGallery';
 import Galleries from './pages/Galleries';
 import Gallery from './pages/Gallery';
 
@@ -18,14 +18,10 @@ import Gallery from './pages/Gallery';
 function App() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const activeUser = useSelector(selectActiveUser);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(getActiveUser());
-    }
-  }, 
-  []);
+    isAuthenticated && dispatch(getActiveUser());
+  }, []);
 
   return (
     <div className="App">
@@ -42,28 +38,24 @@ function App() {
           <Route exact path="/"> 
             <Redirect to="/galleries"/>
           </Route>
+
+
           <Route exact path="/galleries">
             <Galleries/>
           </Route>
-          <PrivateRoute exact path="/profile">
-            <Galleries selfId={isAuthenticated ? (activeUser?.id) : null}/>
-          </PrivateRoute>
-          <Route path="/authors/:id" element={<Galleries />} />
-           <Route path="/galleries/:id" element={<Gallery />} />
-           <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}/>
-            <Route path="/my-galleries" element={<Galleries />} />
-          {/* <PrivateRoute exact path="/create">
-            <CreateGallery/>
-          </PrivateRoute> */}
-          {/* <Route exact path="/galleries/:id">
-            <Gallery/>
-          </Route> */}
-          {/* <PrivateRoute exact path ="/edit/:id">
-            <CreateGallery/>
-          </PrivateRoute> */}
-          {/* <Route exact path="/authors/:id">
+
+          <PrivateRoute exact path="/my-galleries">
             <Galleries/>
-          </Route> */}
+          </PrivateRoute>
+
+          <PrivateRoute exact path="/create">
+            <CreateGallery/>
+          </PrivateRoute>
+
+          <PrivateRoute exact path="/edit-gallery/:id">
+            <CreateGallery/>
+          </PrivateRoute>
+
         </Switch>
       </Router>
     </div>

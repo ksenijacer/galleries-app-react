@@ -22,9 +22,9 @@ export default function Login() {
     <div>
       <h4 style={{ color: "white", backgroundColor: "orange" }}>Login</h4>
       <form
-        style={{ display: "flex", flexDirection: "column", width: 300 }}
+        style={{ display: "flex", flexDirection: "column", width: 300, padding:5 }}
         onSubmit={handleSubmit}
-      >
+      > <label>
         <input
           required
           value={credentials.email}
@@ -32,7 +32,8 @@ export default function Login() {
           onChange={({ target }) =>
             setCredentials({ ...credentials, email: target.value })
           }
-        />
+        /> </label>
+        <label>
         <input
           required
           value={credentials.password}
@@ -41,8 +42,9 @@ export default function Login() {
           onChange={({ target }) =>
             setCredentials({ ...credentials, password: target.value })
           }
-        />
-        <button style={{ color: "white", backgroundColor: "green"}}>Login</button>
+        /> </label>
+        < br/>
+        <button style={{ color: "white", backgroundColor: "green", width: 160}}>Login</button>
       </form>
     </div>
   );

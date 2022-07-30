@@ -11,14 +11,14 @@ function SingleGallery({ gallery }) {
             <img src={first_image?.url} className="card-img-top" alt="gallery" />
             <div className="card-body">
               <Link to={`/galleries/${id}`}>
-                <h5 className="card-title">{name}</h5>
+                <h5 className="card-title" style={{ color: "white", backgroundColor: "orange" }}>{name}</h5>
               </Link>
-              <p className="card-text">
+              <p className="card-text" style={{ color: "white", backgroundColor: "lightgreen" }}>
                 <Link to={`/authors/${user.id}`}>
-                  {user?.firstName} {user?.lastName}
+                  {user?.first_name} {user?.last_name}
                 </Link>
               </p>
-              <p className="card-text">Created: {useFormattedDate(created_at)}</p>
+              <p className="card-text" style={{ color: "green"}}>Created: {useFormattedDate(created_at)}</p>
             </div>
           </div>
         </div>

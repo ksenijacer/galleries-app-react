@@ -14,16 +14,17 @@ import {
     deleteComment,
     appendGalleries,
   } from './index';
+  
   import { takeLatest, call, put, select } from 'redux-saga/effects';
-  import GalleriesService from './../../services/GalleriesService';
-//   import CommentService from '../../services/CommentService';
+  import GalleryService from '../../services/GalleryService';
+  import CommentService from '../../services/CommentService';
   
   function* getGalleriesHandler({ payload }) {
     if (!(payload.page > 1)) {
       yield put(setGalleries(null));
     }
     try {
-      const galleries = yield call(GalleriesService.getAll, payload);
+      const galleries = yield call(GalleryService.getAll, payload);
       if (galleries.current_page > 1) {
         yield put(appendGalleries(galleries));
       } else {
@@ -37,7 +38,7 @@ import {
   function* addGalleryHandler({ payload }) {
     yield put(setCreateErrors(null));
     try {
-      yield call(GalleriesService.create, payload.gallery);
+      yield call(GalleryService.create, payload.gallery);
       if (typeof payload.meta?.onSuccess === 'function') {
         yield call(payload.meta.onSuccess);
       }
@@ -49,10 +50,11 @@ import {
     }
   }
   
+  
   function* getGalleryHandler({ payload }) {
     yield put(setGallery(null));
     try {
-      const gallery = yield call(GalleriesService.getById, payload.id);
+      const gallery = yield call(GalleryService.get, payload.id);
       yield put(setGallery(gallery));
     } catch (error) {
       console.log('get all gallery', error);
@@ -67,7 +69,7 @@ import {
   function* editGalleryHandler({ payload }) {
     yield put(setCreateErrors(null));
     try {
-      yield call(GalleriesService.edit, payload.id, payload.gallery);
+      yield call(GalleryService.edit, payload.id, payload.gallery);
       if (typeof payload.meta?.onSuccess === 'function') {
         yield call(payload.meta.onSuccess);
       }
@@ -81,7 +83,7 @@ import {
   
   function* deleteGalleryHandler({ payload }) {
     try {
-      yield call(GalleriesService.delete, payload.id);
+      yield call(GalleryService.delete, payload.id);
       if (typeof payload.meta?.onDelete === 'function') {
         yield call(payload.meta.onDelete);
       }
@@ -90,39 +92,40 @@ import {
     }
   }
   
-//   function* addCommentHandler({ payload }) {
-//     yield put(setAddCommentErrors(null));
-//     try {
-//       const comment = yield call(CommentService.add, payload.id, payload.content);
-//       yield put(setNewComment(comment));
-//       if (typeof payload.meta?.onSuccess === 'function') {
-//         yield call(payload.meta.onSuccess);
-//       }
-//     } catch (error) {
-//       console.log('addCommentHandler', error);
-//       if (error.response.status === 422) {
-//         yield put(setAddCommentErrors(error.response.data.errors));
-//       }
-//     }
-//   }
-  
-//   function* deleteCommentHandler({ payload }) {
-//     try {
-//       yield call(CommentService.delete, payload);
-//       yield put(setDeletedComment(payload));
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
-  
-  export function* watchAddGallery() {
-    yield takeLatest(createGallery.type, addGalleryHandler);
+  function* addCommentHandler({ payload }) {
+    yield put(setAddCommentErrors(null));
+    try {
+      const comment = yield call(CommentService.add, payload.id, payload.content);
+      yield put(setNewComment(comment));
+      if (typeof payload.meta?.onSuccess === 'function') {
+        yield call(payload.meta.onSuccess);
+      }
+    } catch (error) {
+      console.log('addCommentHandler', error);
+      if (error.response.status === 422) {
+        yield put(setAddCommentErrors(error.response.data.errors));
+      }
+    }
   }
+  
+  function* deleteCommentHandler({ payload }) {
+    try {
+      yield call(CommentService.delete, payload);
+      yield put(setDeletedComment(payload));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+
   export function* watchGetGalleries() {
     yield takeLatest(getGalleries.type, getGalleriesHandler);
   }
   export function* watchGetGallery() {
     yield takeLatest(getGallery.type, getGalleryHandler);
+  }  
+  export function* watchAddGallery() {
+    yield takeLatest(createGallery.type, addGalleryHandler);
   }
   export function* watchEditGallery() {
     yield takeLatest(editGallery.type, editGalleryHandler);
@@ -130,9 +133,9 @@ import {
   export function* watchDeleteGallery() {
     yield takeLatest(deleteGallery.type, deleteGalleryHandler);
   }
-//   export function* watchAddComment() {
-//     yield takeLatest(addComment.type, addCommentHandler);
-//   }
-//   export function* watchDeleteComment() {
-//     yield takeLatest(deleteComment.type, deleteCommentHandler);
-//   }
+  export function* watchAddComment() {
+    yield takeLatest(addComment.type, addCommentHandler);
+  }
+  export function* watchDeleteComment() {
+    yield takeLatest(deleteComment.type, deleteCommentHandler);
+  }

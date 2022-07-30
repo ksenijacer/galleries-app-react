@@ -17,6 +17,7 @@ export const galleriesSlice = createSlice({
         gallery: null,
         galleries:null,
         createErrors: null,
+        addCommentErrors: null,
         page: {
             data: [],
             current_page: 1,
@@ -46,22 +47,21 @@ export const galleriesSlice = createSlice({
             state.galleries.current_page = action.payload;
           },
 
-          setCreateErrors(state, { payload }) {
-            state.createErrors = payload;
-          },
+        setCreateErrors(state, { payload }) {
+          state.createErrors = payload;
+        },
 
-          setAddCommentErrors(state, { payload }) {
-            state.addCommentErrors = payload;
-          },
-          setNewComment(state, { payload }) {
-            state.gallery.comments = [...state.gallery.comments, payload];
-          },
-          setDeletedComment(state, { payload }) {
-            const updated = state.gallery.comments.filter(
-              (comment) => comment.id !== payload
-            );
-            state.gallery.comments = updated;
-          },
+        setAddCommentErrors(state, { payload }) {
+          state.addCommentErrors = payload;
+        },
+        setNewComment(state, { payload }) {
+          state.gallery.comments = [...state.gallery.comments, payload];
+        },
+        setDeletedComment(state, { payload }) {
+          const updated = state.gallery.comments.filter(
+            (comment) => comment.id !== payload);
+          state.gallery.comments = updated;
+        },
       ...middlewareActions,
     },
   });
@@ -75,9 +75,10 @@ export const galleriesSlice = createSlice({
     appendGalleries,
     setCurrentPage,
   
-    createGallery,
+    
     getGalleries,
     getGallery,
+    createGallery,
     editGallery,
     deleteGallery,
     addComment,

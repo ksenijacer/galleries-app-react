@@ -4,7 +4,7 @@ import { logout } from "../store/auth/slice";
 import { selectActiveUser, selectIsAuthenticated } from "../store/auth/selectors";
 import '../App.css';
 
-export default function Navbar(){
+export default function NavBar(){
     const dispatch = useDispatch();
     const activeUser = useSelector(selectActiveUser);
     const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -19,7 +19,7 @@ export default function Navbar(){
             <ul style={{listStyleType: "none", text_align: "center" }}>
             {isAuthenticated ? (
                 <h3>
-                    User: {activeUser && activeUser.firstName} {activeUser && activeUser.lastName}  
+                    User: {activeUser && activeUser.first_name} {activeUser && activeUser.last_name}  
                 </h3>
             ) : (
                 <h3 style={{color: "red"}}>
@@ -35,7 +35,7 @@ export default function Navbar(){
                         <Link to="/create">Create New Gallery</Link>
                     </li>
                     <li>
-                    <Link to="/profile">My Gallery</Link>
+                    <Link to="/my-galleries">My Gallery</Link>
                     </li>
                     <button style={{ color: "white", backgroundColor: "green" }} onClick={handleLogout}>Logout</button>
                 </>
