@@ -29,7 +29,7 @@ function Galleries() {
       </div>
       {galleries ? (
         galleries.data.length ? (
-          <div className="card-group mt-2">
+          <div className="card-group mt-2" >
             {galleries.data.map((gallery) => (
               <SingleGallery key={gallery.id} gallery={gallery} />
             ))}

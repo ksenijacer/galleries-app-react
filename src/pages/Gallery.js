@@ -99,7 +99,7 @@ function SingleGallery() {
       <p>Created at: {created_at}</p>
       <p>Description:</p> <p> {description}</p>
       <div>
-      <CarouselComponent images={images}  />
+      <CarouselComponent images={images}/>
       </div>
       <div className="">
         {comments?.map((comment, index) => (

@@ -5,9 +5,9 @@ import useFormattedDate from '../hooks/useFromattedDate';
 function SingleGallery({ gallery }) {
     const { id, name, created_at, first_image, user } = gallery;
     return (
-      <div className="row mb-4">
+      <div className="row mb-4" >
         <div className="col-12">
-          <div className="card h-100" style={{ width: '250px' }}>
+          <div className="card h-100" style={{ width: "250px" }}>
             <img src={first_image?.url} className="card-img-top" alt="gallery" />
             <div className="card-body">
               <Link to={`/galleries/${id}`}>
