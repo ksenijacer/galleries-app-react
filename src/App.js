@@ -56,6 +56,14 @@ function App() {
             <CreateGallery/>
           </PrivateRoute>
 
+          <Route path="/authors/:id">
+            <Galleries />
+          </Route>
+
+          <Route path="/galleries/:id">
+            <Gallery />
+          </Route>
+
         </Switch>
       </Router>
     </div>

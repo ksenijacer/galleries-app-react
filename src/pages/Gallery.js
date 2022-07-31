@@ -92,13 +92,15 @@ function SingleGallery() {
       </div>
       <p>
         Author:{' '}
-        <Link to={`/authors/${user?.id}`}>
+        <Link to={`/authors/${user?.id}`}  style={{ color: "green" }}>
           {user?.first_name} {user?.last_name}
         </Link>
       </p>
       <p>Created at: {created_at}</p>
-      <p>Description: {description}</p>
-      <CarouselComponent images={images} />
+      <p>Description:</p> <p> {description}</p>
+      <div>
+      <CarouselComponent images={images}  />
+      </div>
       <div className="">
         {comments?.map((comment, index) => (
           <div key={index} className="">

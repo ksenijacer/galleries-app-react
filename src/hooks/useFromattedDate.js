@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-function useFormattedDate(str, outputFormat = 'yyyy-MM-dd HH:mm:ss') {
+function useFormattedDate(str, outputFormat = 'yyyy-MM-dd HH:mm') {
   if (!str) {
     return '';
   }
