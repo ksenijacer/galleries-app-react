@@ -116,11 +116,11 @@ function CreateGallery() {
   };
   //Image URL - handlers - end
   return (
-    <div className="container">
-      <h3>{id ? 'Edit gallery' : 'Create New Gallery'}</h3>
+    <div >
+      <h4 style={{ color: "white", backgroundColor: "orange" }}>{id ? 'Edit gallery' : 'Create New Gallery'}</h4>
       <form onSubmit={handleSubmit}>
-        <input
-          placeholder="name"
+        <input style={{ margin: 5, width: 500}}
+          placeholder="Name your gallery"
           name="name"
           type="text"
           onChange={({ target }) =>
@@ -129,11 +129,13 @@ function CreateGallery() {
           value={gallery.name}
         />
         {createErrors && <p className="text-danger">{createErrors.name}</p>}
+        < br/>
 
-        <textarea
-          placeholder="description"
+
+        <textarea style={{ margin: 5, width: 500}}
+          placeholder="Description"
           name="description"
-          rows="4"
+          rows="5"
           onChange={({ target }) =>
             setGallery({ ...gallery, [target.name]: target.value })
           }
@@ -145,17 +147,18 @@ function CreateGallery() {
 
         {gallery?.url?.map((image, index) => (
           <div key={index}>
-            <div className="d-flex">
-              <input
+            <div>
+              <input style={{ margin: 5, width: 500}}
                 required
-                placeholder="image"
+                placeholder="Image url"
                 name="url"
                 type="url"
                 onChange={({ target }) => handleUpdateUrl(target, index)}
                 value={gallery.url[index]}
               />
+              < br/>
 
-              <div className="btn-group btn-group-sm gap-1 col-3">
+              <div className="btn-group btn-group-sm gap-1 col-3"  style={{ margin: 5 }} >
                 <button
                   className="btn btn-primary mb-2"
                   disabled={index === 0}
@@ -180,6 +183,7 @@ function CreateGallery() {
                 >
                   Remove
                 </button>
+                < br/>
               </div>
             </div>
             {createErrors && (
@@ -187,7 +191,7 @@ function CreateGallery() {
             )}
           </div>
         ))}
-        <button className="btn btn-sm btn-primary my-2 mx-3">
+        <button className="btn btn-sm btn-primary my-2 mx-3" style={{ color: "white", backgroundColor: "green" }}>
           Submit
         </button>
         <button

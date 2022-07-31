@@ -97,7 +97,7 @@ function SingleGallery() {
         </Link>
       </p>
       <p>Created at: {created_at}</p>
-      <p>Description:</p> <p> {description}</p>
+      <p>Description: {description}</p>
       <div>
       <CarouselComponent images={images}/>
       </div>

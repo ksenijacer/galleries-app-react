@@ -34,21 +34,23 @@ function CommentForm() {
     );
   }
   return (
-    <>
+    <> 
+    < br/>
+    <h4 style={{ textAlign: 'left' }}>Comments:</h4>
       <textarea
         required
         className="form-control mt-2"
-        rows="4"
-        placeholder="add new comment"
+        rows="5"
+        placeholder="Write comment"
         onChange={({ target }) => setContent(target.value)}
         value={content}
       ></textarea>
       {addCommentErrors && (
         <p className="text-danger">{addCommentErrors.content}</p>
       )}
-      <button
+      <button  style={{ color: "white", backgroundColor: "green", float: "right"}}
         type="button"
-        className="btn btn-primary btn-sm float-end mt-2 mb-5"
+        className="btn btn-primary btn-sm mt-2 mb-5"
         onClick={handleAddComment}
       >
         Add comment

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const middlewareActions = {
     getGalleries() {},
     getGallery() {},
-    addGallery() {},
+    createGallery() {},
     editGallery() {},
     deleteGallery() {},
     addComment() {},
