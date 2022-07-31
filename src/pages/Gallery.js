@@ -67,29 +67,10 @@ function SingleGallery() {
     history.push(`/edit-gallery/${galleryId}`);
   }
 
+
   return (
     <div className="container">
-      <div className="">
-        <h3>{name}</h3>
-        {authUser?.id === user?.id && (
-          <>
-            <button
-              type="button"
-              className="btn btn-warning btn-sm mx-1 col-1"
-              onClick={handleEdit}
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              className="btn btn-danger btn-sm mx-1 col-1"
-              onClick={handleDelete}
-            >
-              Delete
-            </button>
-          </>
-        )}
-      </div>
+      
       <p>
         Author:{' '}
         <Link to={`/authors/${user?.id}`}  style={{ color: "green" }}>
@@ -101,9 +82,33 @@ function SingleGallery() {
       <div>
       <CarouselComponent images={images}/>
       </div>
+
+      <div>
+        <h3>{name}</h3>
+        {authUser?.id === user?.id && (
+          <>
+            <button style={{ float: 'left', color: 'white'}}
+              type="button"
+              className="btn btn-warning btn-sm mx-1 col-1"
+              onClick={handleEdit}
+            >
+              Edit gallery
+            </button>
+            <button style={{ float: 'right'}}
+              type="button"
+              className="btn btn-danger btn-sm mx-1 col-2"
+              onClick={handleDelete}
+            >
+              Delete gallery
+            </button>
+          </>
+        )}
+      </div>
+
+      < br/>
       <div className="">
         {comments?.map((comment, index) => (
-          <div key={index} className="">
+          <div key={index} >
             <Comment comment={comment} />
           </div>
         ))}

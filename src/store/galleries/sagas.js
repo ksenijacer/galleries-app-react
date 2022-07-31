@@ -13,13 +13,17 @@ import {
     addComment,
     deleteComment,
     appendGalleries,
+    setCurrentPages,
+    setSort
   } from './index';
   
   import { takeLatest, call, put, select } from 'redux-saga/effects';
   import GalleryService from '../../services/GalleryService';
   import CommentService from '../../services/CommentService';
+  import { selectSort } from './selectors';
   
   function* getGalleriesHandler({ payload }) {
+    
     if (!(payload.page > 1)) {
       yield put(setGalleries(null));
     }
@@ -35,21 +39,6 @@ import {
     }
   }
   
-  function* addGalleryHandler({ payload }) {
-    yield put(setCreateErrors(null));
-    try {
-      yield call(GalleryService.create, payload.gallery);
-      if (typeof payload.meta?.onSuccess === 'function') {
-        yield call(payload.meta.onSuccess);
-      }
-    } catch (error) {
-      console.log('addGalleryHandler', error);
-      if (error.response.status === 422) {
-        yield put(setCreateErrors(error.response.data.errors));
-      }
-    }
-  }
-  
   
   function* getGalleryHandler({ payload }) {
     yield put(setGallery(null));
@@ -62,6 +51,22 @@ import {
         if (typeof payload.meta?.onNotFound === 'function') {
           yield call(payload.meta.onNotFound);
         }
+      }
+    }
+  }
+
+  
+  function* addGalleryHandler({ payload }) {
+    yield put(setCreateErrors(null));
+    try {
+      yield call(GalleryService.create, payload.gallery);
+      if (typeof payload.meta?.onSuccess === 'function') {
+        yield call(payload.meta.onSuccess);
+      }
+    } catch (error) {
+      console.log('addGalleryHandler', error);
+      if (error.response.status === 422) {
+        yield put(setCreateErrors(error.response.data.errors));
       }
     }
   }

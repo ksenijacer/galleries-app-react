@@ -1,7 +1,7 @@
 import React from 'react';
 import useFormattedDate from '../hooks/useFromattedDate';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteComment } from '../store/galleries/index';
+import { deleteComment } from '../store/galleries';
 import { selectActiveUser } from './../store/auth/selectors';
 
 function Comment({ comment }) {

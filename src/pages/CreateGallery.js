@@ -20,7 +20,7 @@ function CreateGallery() {
   const createErrors = useSelector(selectCreateErrors);
   console.log(createErrors);
 
-  // If id param exist -> get gallery, if gallery doesn't exit -> redirect
+
   useEffect(() => {
     if (id) {
       dispatch(
@@ -30,13 +30,11 @@ function CreateGallery() {
         })
       );
     } else {
-      handleResetForm(); // Clear form when click on crete new gallery
+      handleResetForm(); 
     }
     dispatch(setCreateErrors(''));
   }, [id]);
 
-  console.log(useEffect)
-  // when gallery and auth user loading are finished -> fill the form
   useEffect(() => {
     if (id && galleryForUpdate && authUser?.id) {
       const { name, description, images } = galleryForUpdate;
@@ -51,19 +49,21 @@ function CreateGallery() {
       dispatch(
         editGallery({
           id,
-          gallery,
-          meta: { onSuccess: handleActionSuccess },
+          gallery: gallery,
+          meta:handleActionSuccess,
         })
       );
     } else {
       dispatch(
         createGallery({
-          gallery,
-          meta: { onSuccess: handleActionSuccess },
+          gallery: gallery,
+          meta: handleActionSuccess,
         })
       );
     }
   };
+
+  console.log(handleSubmit);
 
   function handleActionSuccess() {
     history.push(id ? `/galleries/${id}` : '/my-galleries');
@@ -81,14 +81,14 @@ function CreateGallery() {
     });
   };
 
-  // while gallery and auth user are loading -> show loading..., when finished if gallery isn't mine -> redirect
+  
   if (id && (!galleryForUpdate || !authUser?.id)) {
     return <div>Loading...</div>;
   } else if (id && galleryForUpdate?.user_id !== authUser?.id) {
     handleNotFoundAction();
   }
 
-  //Image URL - handlers
+
   const handleUpdateUrl = (target, index) => {
     const newUrl = [...gallery.url];
     newUrl[index] = target.value;
@@ -114,7 +114,7 @@ function CreateGallery() {
     newUrl.splice(Math.max(index + step, 0), 0, gallery.url[index]);
     setGallery({ ...gallery, url: newUrl });
   };
-  //Image URL - handlers - end
+
   return (
     <div >
       <h4 style={{ color: "white", backgroundColor: "orange" }}>{id ? 'Edit gallery' : 'Create New Gallery'}</h4>

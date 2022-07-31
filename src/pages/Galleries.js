@@ -4,7 +4,8 @@ import { getGalleries, selectGalleries } from '../store/galleries';
 import { useLocation, useParams } from 'react-router-dom';
 import { selectActiveUser } from '../store/auth';
 import SingleGallery  from './../components/SingleGallery';
-
+import { setSort } from '../store/galleries';
+import Pagination from '../components/Pagination';
 function Galleries() {
     const dispatch = useDispatch();
     let { id } = useParams();
@@ -20,16 +21,29 @@ function Galleries() {
     useEffect(() => {
       dispatch(getGalleries({ author: id }));
     }, [id]);
+
+  
+    function handlePageSelected(page) {
+      console.log("page selected", page);
+      dispatch(getGalleries({ page }));
+    }
+    function handleLoadMore() {
+      dispatch(
+        getGalleries({
+          page: galleries.current_page + 1,
+        })
+      );
+    }
   
 
   return (
-    <div>
+    <><div>
       <div>
         <h3 style={{ color: "white", backgroundColor: "orange" }}>{title}</h3>
       </div>
       {galleries ? (
         galleries.data.length ? (
-          <div className="card-group mt-2" >
+          <div className="card-group mt-2">
             {galleries.data.map((gallery) => (
               <SingleGallery key={gallery.id} gallery={gallery} />
             ))}
@@ -41,6 +55,14 @@ function Galleries() {
         'Loading...'
       )}
     </div>
+    <Pagination
+        // lastPage={galleries.last_page}
+        onPageSelect={handlePageSelected} /><button
+          onClick={handleLoadMore}
+          // disabled={galleries.current_page == galleries.last_page}
+        >
+        Load more
+      </button></>
   );
 }
 

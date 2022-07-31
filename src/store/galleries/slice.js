@@ -18,6 +18,8 @@ export const galleriesSlice = createSlice({
         galleries:null,
         createErrors: null,
         addCommentErrors: null,
+        galleriesList: [],
+        sort: null,
         page: {
             data: [],
             current_page: 1,
@@ -34,18 +36,17 @@ export const galleriesSlice = createSlice({
 
         deleteGallerySuccess(state, { payload }) {
             state.page.data = state.page.data.filter((gallery) => gallery.id !== payload);
-          },
-
+        },
         appendGalleries: (state, { payload }) => {
             state.galleries = {
               ...payload,
               data: [...state.galleries.data, ...payload.data],
             };
-          },
+        },
 
         setCurrentPage: (state, action) => {
             state.galleries.current_page = action.payload;
-          },
+        },
 
         setCreateErrors(state, { payload }) {
           state.createErrors = payload;
@@ -55,13 +56,15 @@ export const galleriesSlice = createSlice({
           state.addCommentErrors = payload;
         },
         setNewComment(state, { payload }) {
-          state.gallery.comments = [...state.gallery.comments, payload];
+          state.galleries.comments = [...state.galleries.comments, payload];
         },
         setDeletedComment(state, { payload }) {
-          const updated = state.gallery.comments.filter(
+          const updated = state.galleries.comments.filter(
             (comment) => comment.id !== payload);
-          state.gallery.comments = updated;
+          state.galleries.comments = updated;
         },
+
+
       ...middlewareActions,
     },
   });
@@ -82,7 +85,7 @@ export const galleriesSlice = createSlice({
     editGallery,
     deleteGallery,
     addComment,
-    deleteComment, } 
+    deleteComment,} 
   = galleriesSlice.actions;
   
   export default galleriesSlice.reducer; 

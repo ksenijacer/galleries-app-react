@@ -6,7 +6,7 @@ function CarouselComponent({ images }) {
       {images.map((image, index) => (
         <Carousel.Item>
           <a key={index} href={image.url} target="_blank" rel="noreferrer">
-            <img
+            <img key={image}
               style={{ width: '1100px', height: '350px', objectFit: 'contain' }}
               src={image.url}
               alt={`slide ${index + 1}`}
