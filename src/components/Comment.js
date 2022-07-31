@@ -17,9 +17,9 @@ function Comment({ comment }) {
 
   return (
     <div className="card-body">
-      <div className="">
-        <div className="row">
-          <h6 className="fw-bold text-primary mb-1 col-10">
+      <div className="comment2">
+        <div className="row" style={{border: '2'}}>
+          <h6 className="fw-bold text-primary mb-1 col-10" style={{border: '2'}}>
             {comment.user.first_name} {comment.user.last_name}
           </h6>
           {authUser?.id === comment.user.id && (
@@ -37,6 +37,7 @@ function Comment({ comment }) {
         </p>
       </div>
       <p className="m-0">{comment.content}</p>
+      <hr></hr>
     </div>
   );
 }

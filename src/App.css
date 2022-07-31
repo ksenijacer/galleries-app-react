@@ -41,9 +41,16 @@
 .btn-group {
   height: 60px;
   text-align: justify;
+  border-radius: right, 5px
   ;
 
 }
 
+.card-body {
+  text-align:start;
 
+}
 
+.comment2 {
+  border: #282c34;
+}
