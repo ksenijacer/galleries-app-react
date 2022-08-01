@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGalleries, selectGalleries } from '../store/galleries';
 import { useLocation, useParams } from 'react-router-dom';
@@ -15,7 +15,10 @@ function Galleries() {
     const galleries = useSelector(selectGalleries);
     let title = 'Galleries';
 
-
+    const search = useLocation().search;
+    const filter = new URLSearchParams(search).get('filter')  || '';
+ 
+  
     if (!id && pathname === '/my-galleries') {
       title = 'My galleries';
       id = authUser?.id;
