@@ -32,6 +32,7 @@ function* registerHandler(action) {
   yield put(setRegistrationErrors(null));
   try {
     const data = yield call(authService.register, action.payload);
+    console.log(data);
     localStorage.setItem("token", data.token);
 
     yield put(setToken(data.token));
@@ -43,9 +44,9 @@ function* registerHandler(action) {
   }
 }
 
-function* logoutHandler(action) {
+function* logoutHandler() {
   try {
-    yield call(authService.logout, action.payload);
+    yield call(authService.logout);
   } catch (e) {
     console.log(e);
   } finally {

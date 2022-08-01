@@ -37,7 +37,10 @@ export default function NavBar(){
                     <li>
                     <Link to="/my-galleries">My Gallery</Link>
                     </li>
-                    <button style={{ color: "white", backgroundColor: "green" }} onClick={handleLogout}>Logout</button>
+                    <button 
+                    className="btn mb-2"
+                    style={{ color: "white", backgroundColor: "green" }} 
+                    onClick={handleLogout}>Logout</button>
                 </>
             ) : (
                 <>

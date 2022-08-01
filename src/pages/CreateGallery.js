@@ -49,7 +49,7 @@ function CreateGallery() {
         editGallery({
           id,
           gallery: gallery,
-          meta: {onSucces: handleActionSuccess},
+          meta: {onSuccess: handleActionSuccess},
         })
       );
     } else {
@@ -57,7 +57,7 @@ function CreateGallery() {
         createGallery({
           gallery: gallery,
           meta: {
-            onSucces: handleActionSuccess
+            onSuccess: handleActionSuccess
           },
         })
       );
@@ -65,7 +65,7 @@ function CreateGallery() {
   };
 
   function handleActionSuccess() {
-    history.push('/my-galleries');
+    history.push(id ? `/galleries/${id}` : '/my-galleries');
   }
 
   function handleNotFoundAction() {
@@ -116,7 +116,7 @@ function CreateGallery() {
 
   return (
     <div >
-      <h4 style={{ color: "white", backgroundColor: "orange" }}>{id ? 'Edit gallery' : 'Create New Gallery'}</h4>
+      <h3 style={{ color: "white", backgroundColor: "orange" }}>{id ? 'Edit gallery' : 'Create new gallery'}</h3>
       <form onSubmit={handleSubmit}>
         <input style={{ margin: 5, width: 500}}
           placeholder="Name your gallery"
@@ -157,7 +157,7 @@ function CreateGallery() {
               />
               < br/>
 
-              <div className="btn-group btn-group-sm gap-1 col-3"  style={{ margin: 5 }} >
+              <div className="btn btn-group-sm gap-1 col-3"  style={{ margin: 5 }} >
                 <button
                   className="btn btn-primary mb-2"
                   disabled={index === 0}
@@ -186,6 +186,7 @@ function CreateGallery() {
             )}
           </div>
         ))}
+        <br/>
         <button 
         className="btn btn-sm btn-primary my-2 mx-3" 
         style={{ color: "white", backgroundColor: "green" }}  

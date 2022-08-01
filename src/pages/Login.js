@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-
-import authService from "../services/AuthService";
-import { setActiveUser, setToken } from "../store/auth/slice";
+import { login } from "../store/auth/slice";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -11,11 +9,9 @@ export default function Login() {
     password: "",
   });
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    const data = await authService.login(credentials);
-    dispatch(setToken(data.token));
-    dispatch(setActiveUser(data.user));
+    dispatch(login(credentials));
   }
 
   return (

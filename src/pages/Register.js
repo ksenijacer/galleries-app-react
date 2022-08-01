@@ -99,7 +99,7 @@ export default function Register() {
         <div>
         <label>
         <input
-          equired type="checkbox" name="terms" value={true}
+          required type="checkbox" name="terms" value={true}
                 onChange={({ target }) => setUserData({ ...userData, terms: target.checked })}/>
                 I have read and accept Terms and Conditions  
         

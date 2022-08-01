@@ -1,38 +1,44 @@
-// import React, { useEffect, useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { setFilters } from "../store/cars";
+import React, { useState } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 
-// export default function CarSearch() {
-//   const dispatch = useDispatch();
+function Search() {
+  const location = useLocation();
+  const history = useHistory();
+  const [search, setSearch] = useState('');
 
-//   const [searchTerms, setSearchTerms] = useState({
-//     name: "",
-//     description: "",
-    
-//   });
+  function handleFilter(e) {
+    e.preventDefault();
+    setSearch('');
+    history.push({
+      pathname: location.pathname,
+      search: `filter=${search}`,
+    });
+  }
 
-//   useEffect(() => {
-//     dispatch(setFilters(searchTerms));
-//   }, [searchTerms]);
+  return (
+    <form onSubmit={handleFilter}>
+      <div className="input-group" style={{padding: 5,}}>
+        <div className="form-outline">
+          <input style={{}}
+            type="search"
+            id="search-form"
+            className="form-control"
+            value={search}
+            onChange={({ target }) => setSearch(target.value)}
+            placeholder="Search galleries"
+          />
+        </div>
+        <button
+          className="btn" 
+          style={{color:'white', backgroundColor: 'green'}}
+          onClick={handleFilter}
+        >
+          <i className="fas fa-search">Filter</i>
+        </button>
 
-//   return (
-//     <>
-//       <input
-//         type="text"
-//         value={searchTerms.name}
-//         placeholder="Brand"
-//         onChange={({ target }) =>
-//           setSearchTerms({ ...searchTerms, brand: target.value })
-//         }
-//       />
-//       <input
-//         type="text"
-//         value={searchTerms.model}
-//         placeholder="Model"
-//         onChange={({ target }) =>
-//           setSearchTerms({ ...searchTerms, model: target.value })
-//         }
-//       />
-//     </>
-//   );
-// }
+      </div>
+    </form>
+  );
+}
+
+export default Search;

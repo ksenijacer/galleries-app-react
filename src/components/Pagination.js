@@ -9,7 +9,10 @@ export default function Pagination({ last_page, onPageSelect }) {
   return (
     <div>
       {pages.map((page) => (
-        <button onClick={() => onPageSelect(page)} key={page}>
+        <button 
+        className="btn mb-2"
+        style={{color: 'white', backgroundColor: 'orange'}}
+        onClick={() => onPageSelect(page)} key={page}>
           {page}
         </button>
       ))}

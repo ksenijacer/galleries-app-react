@@ -36,7 +36,7 @@ export const galleriesSlice = createSlice({
         deleteGallerySuccess(state, { payload }) {
             state.page.data = state.page.data.filter((gallery) => gallery.id !== payload);
         },
-        appendGalleries: (state, { payload }) => {
+        appendGalleries(state, { payload }) {
             state.galleries = {
               ...payload,
               data: [...state.galleries.data, ...payload.data],
@@ -55,12 +55,12 @@ export const galleriesSlice = createSlice({
           state.addCommentErrors = payload;
         },
         setNewComment(state, { payload }) {
-          state.galleries.comments = [...state.galleries.comments, payload];
+          state.gallery.comments = [...state.gallery.comments, payload];
         },
         setDeletedComment(state, { payload }) {
-          const updated = state.galleries.comments.filter(
+          const updated = state.gallery.comments.filter(
             (comment) => comment.id !== payload);
-          state.galleries.comments = updated;
+          state.gallery.comments = updated;
         },
 
 

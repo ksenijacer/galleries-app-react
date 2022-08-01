@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGalleries, selectGalleries } from '../store/galleries';
 import { useLocation, useParams } from 'react-router-dom';
 import { selectActiveUser } from '../store/auth';
 import SingleGallery  from './../components/SingleGallery';
-import { setSort } from '../store/galleries';
 import Pagination from '../components/Pagination';
+import Search from '../components/Search';
+
 function Galleries() {
     const dispatch = useDispatch();
     let { id } = useParams();
@@ -13,7 +14,8 @@ function Galleries() {
     const { pathname } = useLocation();
     const galleries = useSelector(selectGalleries);
     let title = 'Galleries';
-  
+
+
     if (!id && pathname === '/my-galleries') {
       title = 'My galleries';
       id = authUser?.id;
@@ -41,6 +43,9 @@ function Galleries() {
       <div>
         <h3 style={{ color: "white", backgroundColor: "orange" }}>{title}</h3>
       </div>
+      <div>
+      <Search />
+      </div>
       {galleries ? (
         galleries.data.length ? (
           <div className="card-group mt-2">
@@ -57,7 +62,10 @@ function Galleries() {
     </div>
     <Pagination
         // lastPage={galleries.last_page}
-        onPageSelect={handlePageSelected} /><button
+        onPageSelect={handlePageSelected} />
+        <button
+          className="btn btn mb-2" 
+          style={{color: 'white', backgroundColor: 'orange'}}
           onClick={handleLoadMore}
           // disabled={galleries.current_page == galleries.last_page}
         >

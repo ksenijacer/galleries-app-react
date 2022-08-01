@@ -51,3 +51,8 @@
 
 }
 
+#search-form {
+  width: 300px;
+  padding: 5px;
+  float: inline-start;
+}

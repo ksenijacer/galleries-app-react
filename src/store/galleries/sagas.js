@@ -100,8 +100,8 @@ import {
   function* addCommentHandler({ payload }) {
     yield put(setAddCommentErrors(null));
     try {
-      const comment = yield call(CommentService.add, payload.id, payload.content);
-      yield put(setNewComment(comment));
+      // const comment = yield call(CommentService.add, payload.id, payload.content);
+      yield put(setNewComment(yield call(CommentService.add, payload.id, payload.content)));
       if (typeof payload.meta?.onSuccess === 'function') {
         yield call(payload.meta.onSuccess);
       }

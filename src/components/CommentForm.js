@@ -50,7 +50,7 @@ function CommentForm() {
       )}
       <button  style={{ color: "white", backgroundColor: "green", float: "right"}}
         type="button"
-        className="btn btn-primary btn-sm mt-2 mb-5"
+        className="btn btn-sm mt-2 mb-5"
         onClick={handleAddComment}
       >
         Add comment
