@@ -18,8 +18,8 @@ function Comment({ comment }) {
   return (
     <div className="card-body">
       <div className="comment2">
-        <div className="row" style={{border: '2'}}>
-          <h6 className="fw-bold text-primary mb-1 col-10" style={{border: '2'}}>
+        <div className="row">
+          <h6 className="fw-bold text-primary mb-1 col-10">
             {comment.user.first_name} {comment.user.last_name}
           </h6>
           {authUser?.id === comment.user.id && (

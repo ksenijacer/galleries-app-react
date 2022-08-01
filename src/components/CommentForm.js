@@ -28,7 +28,7 @@ function CommentForm() {
         id,
         content,
         meta: {
-          onSuccess: handleSuccessAction,
+            onSuccess: {handleSuccessAction},
         },
       })
     );

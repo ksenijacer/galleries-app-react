@@ -15,14 +15,13 @@ export const galleriesSlice = createSlice({
     name: "galleries",
     initialState: {
         gallery: null,
-        galleries:null,
         createErrors: null,
         addCommentErrors: null,
-        galleriesList: [],
         sort: null,
         page: {
             data: [],
             current_page: 1,
+            last_page:1,
             total: 0,
         },
     },

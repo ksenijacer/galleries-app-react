@@ -18,7 +18,6 @@ function CreateGallery() {
     url: [''],
   });
   const createErrors = useSelector(selectCreateErrors);
-  console.log(createErrors);
 
 
   useEffect(() => {
@@ -50,23 +49,23 @@ function CreateGallery() {
         editGallery({
           id,
           gallery: gallery,
-          meta:handleActionSuccess,
+          meta: {onSucces: handleActionSuccess},
         })
       );
     } else {
       dispatch(
         createGallery({
           gallery: gallery,
-          meta: handleActionSuccess,
+          meta: {
+            onSucces: handleActionSuccess
+          },
         })
       );
     }
   };
 
-  console.log(handleSubmit);
-
   function handleActionSuccess() {
-    history.push(id ? `/galleries/${id}` : '/my-galleries');
+    history.push('/my-galleries');
   }
 
   function handleNotFoundAction() {
@@ -163,25 +162,21 @@ function CreateGallery() {
                   className="btn btn-primary mb-2"
                   disabled={index === 0}
                   type="button"
-                  onClick={() => handleChangeUrlPosition(index, -1)}
-                >
-                  Move Up
+                  onClick={() => handleChangeUrlPosition(index, -1)}>Move Up
                 </button>
+
                 <button
                   className="btn btn-primary mb-2"
                   disabled={gallery.url.length - 1 === index}
                   type="button"
-                  onClick={() => handleChangeUrlPosition(index, 1)}
-                >
-                  Move Down
+                  onClick={() => handleChangeUrlPosition(index, 1)}>Move Down
                 </button>
+
                 <button
                   className="btn btn-sm btn-danger mb-2 "
                   disabled={gallery.url.length === 1}
                   type="button"
-                  onClick={() => handleRemoveUrl(index)}
-                >
-                  Remove
+                  onClick={() => handleRemoveUrl(index)}>Remove
                 </button>
                 < br/>
               </div>
@@ -191,15 +186,16 @@ function CreateGallery() {
             )}
           </div>
         ))}
-        <button className="btn btn-sm btn-primary my-2 mx-3" style={{ color: "white", backgroundColor: "green" }}>
+        <button 
+        className="btn btn-sm btn-primary my-2 mx-3" 
+        style={{ color: "white", backgroundColor: "green" }}  
+        onClick={handleSubmit}>
           Submit
         </button>
         <button
           className="btn btn-sm btn-warning my-2 mx-3"
           type="button"
-          onClick={handleActionSuccess}
-        >
-          Cancel
+          onClick={handleActionSuccess}>Cancel
         </button>
         <button
           className="btn btn-sm btn-info my-2 mx-3 "
